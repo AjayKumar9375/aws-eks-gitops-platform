@@ -9,5 +9,6 @@ spec:
     helm:
       parameters:
       - name: image.tag
-        value: a04fe95656e9cf9e0bfe8261ec04f131756e382c
+        value: 14a2c98ab2ce786c068ddeb273254a308789bfaa
+
 
