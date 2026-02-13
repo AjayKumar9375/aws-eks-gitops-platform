@@ -1,4 +1,4 @@
-﻿apiVersion: argoproj.io/v1alpha1
+apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: demo-api
@@ -9,4 +9,6 @@ spec:
     helm:
       parameters:
       - name: image.tag
-        value: 0.1.0-dev
+        value: 14a2c98ab2ce786c068ddeb273254a308789bfaa
+
+
