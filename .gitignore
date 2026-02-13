@@ -1,4 +1,5 @@
 .terraform/
+.terraform.lock.hcl
 *.tfstate
 *.tfstate.backup
 crash.log
@@ -7,3 +8,6 @@ crash.log
 
 target/
 out/
+.pytest_cache/
+.ruff_cache/
+.ps1

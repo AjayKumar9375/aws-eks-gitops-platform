@@ -1,8 +1,8 @@
 ﻿replicaCount: 2
 
 image:
-  repository: 123456789012.dkr.ecr.us-east-1.amazonaws.com/demo-api
-  tag: 0.1.0
+  repository: 205474063511.dkr.ecr.us-east-1.amazonaws.com/java-application
+  tag: fd7d6d47bfd1acfaf04eb2fe89a638e8146f9381
   pullPolicy: IfNotPresent
 
 service:

@@ -1,4 +1,4 @@
-﻿apiVersion: argoproj.io/v1alpha1
+apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: demo-api
@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/your-user/your-repo
+    repoURL: https://github.com/AjayKumar9375/aws-eks-gitops-platform.git
     targetRevision: master
     path: services/demo-api/helm/demo-api
     helm:
@@ -19,3 +19,4 @@ spec:
     automated:
       prune: true
       selfHeal: true
+

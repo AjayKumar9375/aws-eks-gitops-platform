@@ -1,4 +1,4 @@
-﻿terraform {
+terraform {
   required_version = ">= 1.6.0"
   required_providers {
     aws = {
@@ -39,9 +39,9 @@ module "eks" {
 
   managed_node_groups = {
     default = {
-      desired_size  = 3
-      max_size      = 8
-      min_size      = 2
+      desired_size   = 3
+      max_size       = 8
+      min_size       = 2
       instance_types = ["m5.large"]
     }
   }

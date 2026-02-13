@@ -1,4 +1,4 @@
-﻿module "eks" {
+module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "20.26.0"
 
@@ -13,9 +13,9 @@
   eks_managed_node_groups = var.managed_node_groups
 
   cluster_addons = {
-    coredns   = {}
+    coredns    = {}
     kube-proxy = {}
-    vpc-cni   = {}
+    vpc-cni    = {}
   }
 
   tags = var.tags

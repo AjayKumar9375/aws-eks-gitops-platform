@@ -51,6 +51,7 @@ powershell -ExecutionPolicy Bypass -File scripts/check.ps1
 - Detailed architecture: `docs/ARCHITECTURE.md`
 - Key engineering decisions: `docs/DECISIONS.md`
 - Interview-focused summary: `docs/PORTFOLIO.md`
+- Deployment runbook: `DEPLOYMENT.md`
 
 ## Next Improvements
 - Progressive delivery (canary/blue-green)

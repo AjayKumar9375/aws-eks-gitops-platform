@@ -15,4 +15,4 @@ spec:
       pattern:
         spec:
           containers:
-          - image: "123456789012.dkr.ecr.us-east-1.amazonaws.com/*"
+          - image: "205474063511.dkr.ecr.us-east-1.amazonaws.com/*"
