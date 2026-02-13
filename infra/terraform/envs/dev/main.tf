@@ -1,4 +1,4 @@
-﻿terraform {
+terraform {
   required_version = ">= 1.6.0"
   required_providers {
     aws = {
@@ -31,17 +31,17 @@ module "vpc" {
 }
 
 module "eks" {
-  source            = "../../modules/eks"
-  cluster_name      = local.name
-  cluster_version   = "1.29"
-  vpc_id            = module.vpc.vpc_id
+  source             = "../../modules/eks"
+  cluster_name       = local.name
+  cluster_version    = "1.29"
+  vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnet_ids
 
   managed_node_groups = {
     default = {
-      desired_size  = 1
-      max_size      = 2
-      min_size      = 1
+      desired_size   = 1
+      max_size       = 2
+      min_size       = 1
       instance_types = ["t3.micro"]
     }
   }
