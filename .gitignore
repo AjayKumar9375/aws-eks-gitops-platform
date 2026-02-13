@@ -10,5 +10,3 @@ target/
 out/
 .pytest_cache/
 .ruff_cache/
-*.ps1
-.ps1

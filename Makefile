@@ -6,7 +6,7 @@ lint:
 test:
 	cd services/demo-api && mvn -B -ntp test
 
-check: lint test
+check: lint test terraform-check
 
 run:
 	cd services/demo-api && mvn -B -ntp spring-boot:run
