@@ -28,18 +28,23 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_TAG: ${{ inputs.image_tag != '' && inputs.image_tag || github.sha }}
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      ECR_REPO: ${{ vars.ECR_REPO }}
     steps:
       - uses: actions/checkout@v4
+      - name: Validate required CI settings
+        run: |
+          test -n "${{ secrets.AWS_ROLE_ARN }}" || (echo "Missing secret: AWS_ROLE_ARN" && exit 1)
+          test -n "$AWS_REGION" || (echo "Missing repository variable: AWS_REGION" && exit 1)
+          test -n "$ECR_REPO" || (echo "Missing repository variable: ECR_REPO" && exit 1)
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: us-east-1
+          aws-region: ${{ env.AWS_REGION }}
       - name: Login to ECR
         uses: aws-actions/amazon-ecr-login@v2
       - name: Build and push image
-        env:
-          ECR_REPO: 123456789012.dkr.ecr.us-east-1.amazonaws.com/demo-api
         run: |
           docker build -t $ECR_REPO:$IMAGE_TAG services/demo-api
           if [ "${{ github.event_name }}" = "push" ] || [ "${{ inputs.push_image }}" = "true" ]; then

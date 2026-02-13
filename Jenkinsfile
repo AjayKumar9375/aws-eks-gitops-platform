@@ -7,8 +7,9 @@ pipeline {
 
   parameters {
     booleanParam(name: 'PUSH_IMAGE', defaultValue: false, description: 'Push Docker image to ECR')
-    string(name: 'AWS_REGION', defaultValue: 'us-east-1', description: 'AWS region for ECR')
-    string(name: 'ECR_REPO', defaultValue: '123456789012.dkr.ecr.us-east-1.amazonaws.com/demo-api', description: 'ECR repository URI')
+    string(name: 'AWS_REGION', defaultValue: '', description: 'AWS region for ECR (or set env AWS_REGION)')
+    string(name: 'ECR_REPO', defaultValue: '', description: 'ECR repository URI (or set env ECR_REPO)')
+    string(name: 'AWS_CREDENTIALS_ID', defaultValue: 'aws-jenkins-creds', description: 'Jenkins AWS credentials ID')
   }
 
   environment {
@@ -42,6 +43,24 @@ pipeline {
       }
     }
 
+    stage('Validate Publish Configuration') {
+      when {
+        expression { return params.PUSH_IMAGE }
+      }
+      steps {
+        script {
+          env.EFFECTIVE_AWS_REGION = params.AWS_REGION?.trim() ? params.AWS_REGION.trim() : (env.AWS_REGION ?: '')
+          env.EFFECTIVE_ECR_REPO = params.ECR_REPO?.trim() ? params.ECR_REPO.trim() : (env.ECR_REPO ?: '')
+          if (!env.EFFECTIVE_AWS_REGION?.trim()) {
+            error('AWS region is required. Set parameter AWS_REGION or Jenkins env AWS_REGION.')
+          }
+          if (!env.EFFECTIVE_ECR_REPO?.trim()) {
+            error('ECR repo is required. Set parameter ECR_REPO or Jenkins env ECR_REPO.')
+          }
+        }
+      }
+    }
+
     stage('Manual Approval') {
       when {
         allOf {
@@ -65,11 +84,11 @@ pipeline {
         }
       }
       steps {
-        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-jenkins-creds']]) {
+        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${params.AWS_CREDENTIALS_ID}"]]) {
           sh '''
-            aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}
-            docker tag demo-api:${IMAGE_TAG} ${ECR_REPO}:${IMAGE_TAG}
-            docker push ${ECR_REPO}:${IMAGE_TAG}
+            aws ecr get-login-password --region ${EFFECTIVE_AWS_REGION} | docker login --username AWS --password-stdin ${EFFECTIVE_ECR_REPO}
+            docker tag demo-api:${IMAGE_TAG} ${EFFECTIVE_ECR_REPO}:${IMAGE_TAG}
+            docker push ${EFFECTIVE_ECR_REPO}:${IMAGE_TAG}
           '''
         }
       }
