@@ -1,15 +1,11 @@
 # Demo API
 
-A minimal Flask service used to demonstrate CI/CD, GitOps, and observability.
+A minimal Spring Boot service used to demonstrate CI/CD, GitOps, and observability.
 
 ## Local Development
 ```bash
 cd services/demo-api
-python -m venv .venv
-# Linux/macOS: source .venv/bin/activate
-# Windows PowerShell: .venv\Scripts\Activate.ps1
-pip install -r dev-requirements.txt
-python app.py
+mvn -B -ntp spring-boot:run
 ```
 
 ## Endpoints
@@ -27,5 +23,5 @@ make test
 
 ```powershell
 # From repo root on Windows
-./scripts/check.ps1
+powershell -ExecutionPolicy Bypass -File scripts/check.ps1
 ```

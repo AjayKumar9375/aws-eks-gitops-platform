@@ -4,8 +4,6 @@
 crash.log
 *.log
 .env
-__pycache__/
-.pytest_cache/
-.ruff_cache/
-.venv/
-venv/
+
+target/
+out/

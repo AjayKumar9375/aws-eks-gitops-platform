@@ -1,19 +1,15 @@
-.PHONY: install-dev lint test check run terraform-fmt terraform-check terraform-plan
-
-install-dev:
-	cd services/demo-api && pip install -r dev-requirements.txt
+.PHONY: lint test check run terraform-fmt terraform-check terraform-plan
 
 lint:
-	ruff check services/demo-api
-	ruff format --check services/demo-api
+	cd services/demo-api && mvn -B -ntp spotless:check
 
 test:
-	cd services/demo-api && pytest tests
+	cd services/demo-api && mvn -B -ntp test
 
-check: lint test terraform-check
+check: lint test
 
 run:
-	cd services/demo-api && python app.py
+	cd services/demo-api && mvn -B -ntp spring-boot:run
 
 terraform-fmt:
 	terraform fmt -recursive infra/terraform

@@ -8,7 +8,7 @@ I built this repository to demonstrate how I design, deploy, and operate a Kuber
 - CI/CD pipelines for linting, testing, scanning, image build, and GitOps promotion
 - Kubernetes security guardrails using Kyverno and OPA Gatekeeper
 - Platform add-ons for ingress, TLS, secrets, and monitoring
-- A sample Flask service (`demo-api`) with health/readiness/metrics endpoints
+- A sample Java Spring Boot service (`demo-api`) with health/readiness/metrics endpoints
 
 ## Why These Choices
 - Terraform gives repeatable infra with clear environment separation (`dev`/`prod`)
@@ -26,15 +26,14 @@ I built this repository to demonstrate how I design, deploy, and operate a Kuber
 - `scripts/`: utility scripts for local checks and image tag updates
 
 ## Quality Standards I Enforced
-- Python linting/formatting with `ruff`
-- Service tests with `pytest`
+- Java formatting checks with `spotless`
+- Service tests with `JUnit` + `Spring Boot Test`
 - Terraform format checks in CI
 - Trivy vulnerability scan in app CI
 - Pre-commit hooks for local consistency
 
 ## Local Verification
 ```bash
-make install-dev
 make check
 ```
 
