@@ -2,7 +2,7 @@ name: demo-api-build-push
 
 on:
   push:
-    branches: ["main"]
+    branches: ["master"]
     paths:
       - services/demo-api/**
       - scripts/bump-image-tag.ps1

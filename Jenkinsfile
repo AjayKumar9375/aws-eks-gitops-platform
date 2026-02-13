@@ -64,7 +64,7 @@ pipeline {
     stage('Manual Approval') {
       when {
         allOf {
-          branch 'main'
+          branch 'master'
           expression { return params.PUSH_IMAGE }
         }
       }
@@ -76,10 +76,10 @@ pipeline {
       }
     }
 
-    stage('Push Docker Image (main only)') {
+    stage('Push Docker Image (master only)') {
       when {
         allOf {
-          branch 'main'
+          branch 'master'
           expression { return params.PUSH_IMAGE }
         }
       }

@@ -43,7 +43,7 @@ powershell -ExecutionPolicy Bypass -File scripts/check.ps1
 
 ## CI/CD Flow
 1. Pull requests run lint, tests, and vulnerability scan.
-2. Push to `main` builds and pushes the image to ECR.
+2. Push to `master` builds and pushes the image to ECR.
 3. Pipeline updates GitOps image tag in `dev` overlay.
 4. Argo CD syncs the new desired state into EKS.
 
