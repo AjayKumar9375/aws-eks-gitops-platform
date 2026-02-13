@@ -7,6 +7,17 @@ on:
       - services/demo-api/**
       - scripts/bump-image-tag.ps1
       - .github/workflows/build-push.yml
+  workflow_dispatch:
+    inputs:
+      push_image:
+        description: "Push image to ECR and update GitOps overlay"
+        required: true
+        default: true
+        type: boolean
+      image_tag:
+        description: "Optional image tag override (defaults to commit SHA)"
+        required: false
+        type: string
 
 permissions:
   id-token: write
@@ -15,6 +26,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      IMAGE_TAG: ${{ inputs.image_tag != '' && inputs.image_tag || github.sha }}
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS credentials
@@ -27,12 +40,16 @@ jobs:
       - name: Build and push image
         env:
           ECR_REPO: 123456789012.dkr.ecr.us-east-1.amazonaws.com/demo-api
-          IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REPO:$IMAGE_TAG services/demo-api
-          docker push $ECR_REPO:$IMAGE_TAG
+          if [ "${{ github.event_name }}" = "push" ] || [ "${{ inputs.push_image }}" = "true" ]; then
+            docker push $ECR_REPO:$IMAGE_TAG
+          else
+            echo "Skipping image push (manual run with push_image=false)."
+          fi
       - name: Update GitOps image tag
-        run: pwsh ./scripts/bump-image-tag.ps1 -Tag ${{ github.sha }} -Overlay dev
+        if: github.event_name == 'push' || inputs.push_image == true
+        run: pwsh ./scripts/bump-image-tag.ps1 -Tag ${{ env.IMAGE_TAG }} -Overlay dev
       - name: Check for GitOps changes
         id: gitops-changes
         run: |
@@ -42,10 +59,10 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
       - name: Commit GitOps update
-        if: steps.gitops-changes.outputs.changed == 'true'
+        if: (github.event_name == 'push' || inputs.push_image == true) && steps.gitops-changes.outputs.changed == 'true'
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add gitops/apps/overlays/dev
-          git commit -m "chore: promote demo-api ${GITHUB_SHA}"
+          git commit -m "chore: promote demo-api ${IMAGE_TAG}"
           git push

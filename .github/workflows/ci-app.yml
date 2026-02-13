@@ -5,6 +5,7 @@ on:
     paths:
       - services/demo-api/**
       - .github/workflows/ci-app.yml
+  workflow_dispatch:
 
 permissions:
   contents: read

@@ -5,6 +5,7 @@ on:
     paths:
       - infra/terraform/**
       - .github/workflows/infra-plan.yml
+  workflow_dispatch:
 
 permissions:
   contents: read
