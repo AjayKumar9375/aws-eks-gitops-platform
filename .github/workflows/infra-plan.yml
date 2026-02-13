@@ -1,0 +1,29 @@
+name: terraform-plan
+
+on:
+  pull_request:
+    paths:
+      - infra/terraform/**
+      - .github/workflows/infra-plan.yml
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform fmt check
+        run: terraform fmt -check -recursive infra/terraform
+      - name: Terraform init and plan (dev)
+        working-directory: infra/terraform/envs/dev
+        run: |
+          terraform init -input=false
+          terraform plan -input=false
+      - name: Terraform init and plan (prod)
+        working-directory: infra/terraform/envs/prod
+        run: |
+          terraform init -input=false
+          terraform plan -input=false

@@ -1,0 +1,5 @@
+﻿resources:
+- ../../base
+
+patches:
+- path: demo-api-patch.yaml

@@ -1,0 +1,6 @@
+﻿resources:
+- demo-api-app.yaml
+- monitoring-app.yaml
+- ingress-app.yaml
+- security-app.yaml
+- secrets-app.yaml

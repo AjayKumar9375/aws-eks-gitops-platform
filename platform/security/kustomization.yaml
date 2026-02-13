@@ -1,0 +1,6 @@
+﻿resources:
+- namespace.yaml
+- opa-gatekeeper/constrainttemplate-requiredlabels.yaml
+- opa-gatekeeper/constraint-requiredlabels.yaml
+- kyverno/policy-require-labels.yaml
+- kyverno/policy-allowed-registries.yaml

@@ -1,0 +1,51 @@
+name: demo-api-build-push
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - services/demo-api/**
+      - scripts/bump-image-tag.ps1
+      - .github/workflows/build-push.yml
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Build and push image
+        env:
+          ECR_REPO: 123456789012.dkr.ecr.us-east-1.amazonaws.com/demo-api
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REPO:$IMAGE_TAG services/demo-api
+          docker push $ECR_REPO:$IMAGE_TAG
+      - name: Update GitOps image tag
+        run: pwsh ./scripts/bump-image-tag.ps1 -Tag ${{ github.sha }} -Overlay dev
+      - name: Check for GitOps changes
+        id: gitops-changes
+        run: |
+          if git diff --quiet -- gitops/apps/overlays/dev; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Commit GitOps update
+        if: steps.gitops-changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add gitops/apps/overlays/dev
+          git commit -m "chore: promote demo-api ${GITHUB_SHA}"
+          git push
