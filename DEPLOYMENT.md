@@ -1,9 +1,9 @@
 # Deployment Checklist (EKS + Argo CD + GitHub Actions)
 
-This runbook is for deploying `demo-api` in this repository using:
+This runbook is for deploying `demo-api` using:
 - AWS EKS
 - Argo CD GitOps
-- GitHub Actions (`master` branch)
+- GitHub Actions
 
 ## 1. One-Time: AWS + GitHub OIDC Setup
 
@@ -14,7 +14,7 @@ This runbook is for deploying `demo-api` in this repository using:
 2. Create IAM role for GitHub Actions (example name: `GitHubActionsECRPushRole`):
 - Trust policy restricted to:
   - your GitHub owner/repo
-  - branch `master`
+  - the selected release branch
 
 3. Attach ECR push permissions to that role.
 
@@ -24,13 +24,13 @@ This runbook is for deploying `demo-api` in this repository using:
   - `AWS_ROLE_ARN=arn:aws:iam::<account-id>:role/GitHubActionsECRPushRole`
 - Add Variables:
   - `AWS_REGION=us-east-1`
-  - `ECR_REPO=205474063511.dkr.ecr.us-east-1.amazonaws.com/java-application`
+  - `ECR_REPO=123456789012.dkr.ecr.us-east-1.amazonaws.com/demo-api`
 
 ## 2. One-Time: Create ECR Repo and Lifecycle Policy
 
 ```bash
-aws ecr create-repository --repository-name java-application --region us-east-1
-aws ecr put-lifecycle-policy --repository-name java-application --region us-east-1 --lifecycle-policy-text file://platform/ecr/lifecycle-policy.json
+aws ecr create-repository --repository-name demo-api --region us-east-1
+aws ecr put-lifecycle-policy --repository-name demo-api --region us-east-1 --lifecycle-policy-text file://platform/ecr/lifecycle-policy.json
 ```
 
 If repository already exists, the create command can be skipped.
@@ -101,7 +101,7 @@ kubectl apply --server-side -n argocd -f https://raw.githubusercontent.com/argop
 
 ## 7. Verify GitOps Repo Configuration
 
-Ensure repo URLs point to your real GitHub repository and branch is `master` in:
+Ensure repo URLs point to your GitHub repository and release branch in:
 - `platform/argocd/bootstrap.yaml`
 - `gitops/apps/base/demo-api-app.yaml`
 - `gitops/apps/base/ingress-app.yaml`
@@ -118,7 +118,7 @@ kubectl -n argocd get applications
 
 ## 9. Deploy Application (Normal Flow)
 
-1. Push changes to `master` (or manually run workflow `demo-api-build-push` with `push_image=true`).
+1. Push changes to the release branch, or manually run workflow `demo-api-build-push` with `push_image=true`.
 2. Workflow builds and pushes image to ECR.
 3. Workflow updates `gitops/apps/overlays/dev/demo-api-patch.yaml`.
 4. Argo CD sync deploys updated image.

@@ -5,7 +5,7 @@ param(
   [string]$AppNamespace = "demo",
   [string]$ReleaseName = "demo",
   [string]$ChartPath = "services/demo-api/helm/demo-api",
-  [string]$ImageRepository = "205474063511.dkr.ecr.us-east-1.amazonaws.com/java-application",
+  [string]$ImageRepository = "123456789012.dkr.ecr.us-east-1.amazonaws.com/demo-api",
   [string]$ImageTag = "latest",
   [switch]$InstallArgoCD = $true
 )

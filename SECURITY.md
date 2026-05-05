@@ -2,7 +2,7 @@
 
 ## Reporting
 
-Do not open public issues for sensitive security findings. Share the details privately with the repository owner, including the affected path, impact, and a minimal reproduction when possible.
+Do not open public issues for sensitive security findings. Share the details privately with the project maintainer, including the affected path, impact, and a minimal reproduction when possible.
 
 ## Baseline Controls
 

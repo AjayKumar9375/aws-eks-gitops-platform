@@ -28,7 +28,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: demo-api
-        image: 205474063511.dkr.ecr.us-east-1.amazonaws.com/java-application:0.1.0
+        image: 123456789012.dkr.ecr.us-east-1.amazonaws.com/demo-api:0.1.0
         imagePullPolicy: IfNotPresent
         securityContext:
           allowPrivilegeEscalation: false

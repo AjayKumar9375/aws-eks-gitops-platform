@@ -1,8 +1,8 @@
 # AWS EKS Platform Project
 
-I built this repository to demonstrate how I design, deploy, and operate a Kubernetes platform on AWS using production-oriented DevOps practices.
+Production-oriented reference implementation for designing, deploying, and operating a Kubernetes platform on AWS with GitOps, policy-as-code, observability, and CI/CD automation.
 
-## What I Built
+## Platform Capabilities
 - Terraform infrastructure for VPC + EKS + IAM/IRSA
 - GitOps deployment flow with Argo CD and environment overlays
 - CI/CD pipelines for linting, testing, scanning, image build, and GitOps promotion
@@ -27,10 +27,10 @@ I built this repository to demonstrate how I design, deploy, and operate a Kuber
 - `gitops/`: Argo CD applications and overlays
 - `services/demo-api/`: sample workload, Dockerfile, Kubernetes manifests, Helm chart
 - `.github/workflows/`: CI/CD automation
-- `docs/`: architecture notes, portfolio talking points, and decision records
+- `docs/`: architecture notes, project summary, and decision records
 - `scripts/`: utility scripts for local checks and image tag updates
 
-## Quality Standards I Enforced
+## Quality Standards
 - Java formatting checks with `spotless`
 - Service tests with `JUnit` + `Spring Boot Test`
 - Terraform format checks in CI
@@ -48,6 +48,11 @@ I built this repository to demonstrate how I design, deploy, and operate a Kuber
 - `kubectl` with Kustomize support
 - PowerShell 7+ for helper scripts
 
+## Deployment Configuration
+- Argo CD `repoURL` values point to this repository and should be updated only if the repository is forked or renamed.
+- Replace the sample ECR registry `123456789012.dkr.ecr.us-east-1.amazonaws.com/demo-api` with the target AWS account, region, and repository.
+- Replace sample DNS and contact values such as `demo.example.com` and `platform-admin@example.com` before production use.
+
 ## Local Verification
 ```bash
 make check
@@ -61,14 +66,14 @@ powershell -ExecutionPolicy Bypass -File scripts/check.ps1
 1. Pull requests run lint, tests, and vulnerability scan.
 2. Platform changes render GitOps overlays and lint Helm charts.
 3. Terraform changes run format checks and environment plans.
-4. Push to `master` builds and pushes the image to ECR.
+4. Push to the release branch builds and pushes the image to ECR.
 5. Pipeline updates GitOps image tag in `dev` overlay.
 6. Argo CD syncs the new desired state into EKS.
 
 ## Architecture and Decisions
 - Detailed architecture: `docs/ARCHITECTURE.md`
 - Key engineering decisions: `docs/DECISIONS.md`
-- Interview-focused summary: `docs/PORTFOLIO.md`
+- Project summary: `docs/PORTFOLIO.md`
 - Deployment runbook: `DEPLOYMENT.md`
 
 ## Implemented Platform Upgrades

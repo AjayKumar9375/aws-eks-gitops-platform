@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/AjayKumar9375/aws-eks-gitops-platform.git
-    targetRevision: master
+    targetRevision: main
     path: services/demo-api/helm/demo-api
     helm:
       valueFiles:

@@ -11,8 +11,8 @@
 - Tradeoff: more upfront module design effort.
 
 ## 3. Dual Policy Engines (Kyverno + Gatekeeper)
-- Decision: include both to demonstrate policy patterns.
-- Reason: shows practical understanding of admission control options.
+- Decision: include both to cover complementary policy patterns.
+- Reason: Kyverno is ergonomic for Kubernetes-native validation, while Gatekeeper is useful for Rego-based controls.
 - Tradeoff: additional policy maintenance complexity.
 
 ## 4. Trivy in CI for App Path
@@ -22,5 +22,5 @@
 
 ## 5. Minimal Service with Health + Metrics
 - Decision: keep app intentionally small and production-aware.
-- Reason: showcase platform capabilities rather than application complexity.
+- Reason: keep the focus on platform capabilities rather than application complexity.
 - Tradeoff: limited business logic depth in service layer.

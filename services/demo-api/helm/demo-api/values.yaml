@@ -2,7 +2,7 @@ replicaCount: 2
 team: platform
 
 image:
-  repository: 205474063511.dkr.ecr.us-east-1.amazonaws.com/java-application
+  repository: 123456789012.dkr.ecr.us-east-1.amazonaws.com/demo-api
   tag: fd7d6d47bfd1acfaf04eb2fe89a638e8146f9381
   pullPolicy: IfNotPresent
 
