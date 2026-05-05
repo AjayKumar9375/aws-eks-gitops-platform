@@ -1,17 +1,29 @@
-{{- if not .Values.rollout.enabled }}
-apiVersion: apps/v1
-kind: Deployment
+{{- if .Values.rollout.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: {{ include "demo-api.fullname" . }}
   labels:
 {{ include "demo-api.labels" . | indent 4 }}
 spec:
-  {{ if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{ end }}
+  revisionHistoryLimit: {{ .Values.rollout.revisionHistoryLimit }}
   selector:
     matchLabels:
 {{ include "demo-api.selectorLabels" . | indent 6 }}
+  strategy:
+    canary:
+      maxSurge: {{ .Values.rollout.canary.maxSurge }}
+      maxUnavailable: {{ .Values.rollout.canary.maxUnavailable }}
+      steps:
+{{ toYaml .Values.rollout.canary.steps | indent 8 }}
+      analysis:
+        templates:
+        - templateName: {{ include "demo-api.fullname" . }}-success-rate
+        startingStep: {{ .Values.rollout.canary.analysis.startingStep }}
+        args:
+        - name: service-name
+          value: {{ include "demo-api.fullname" . }}
   template:
     metadata:
       labels:

@@ -1,16 +1,53 @@
-﻿apiVersion: monitoring.coreos.com/v1
+apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: demo-api-rules
   namespace: monitoring
+  labels:
+    app: demo-api
+    team: platform
 spec:
   groups:
-  - name: demo-api.rules
+  - name: demo-api.slo-recording
+    rules:
+    - record: demo_api:requests:rate5m
+      expr: sum(rate(demo_api_requests_total[5m]))
+    - record: demo_api:errors:rate5m
+      expr: sum(rate(demo_api_requests_total{status=~"5.."}[5m]))
+    - record: demo_api:availability_error_ratio:rate5m
+      expr: demo_api:errors:rate5m / clamp_min(demo_api:requests:rate5m, 1)
+    - record: demo_api:availability_error_ratio:rate30m
+      expr: sum(rate(demo_api_requests_total{status=~"5.."}[30m])) / clamp_min(sum(rate(demo_api_requests_total[30m])), 1)
+    - record: demo_api:availability_error_ratio:rate1h
+      expr: sum(rate(demo_api_requests_total{status=~"5.."}[1h])) / clamp_min(sum(rate(demo_api_requests_total[1h])), 1)
+    - record: demo_api:availability_error_ratio:rate6h
+      expr: sum(rate(demo_api_requests_total{status=~"5.."}[6h])) / clamp_min(sum(rate(demo_api_requests_total[6h])), 1)
+  - name: demo-api.slo-alerts
     rules:
     - alert: DemoApiHighErrorRate
-      expr: sum(rate(demo_api_requests_total{status=~"5.."}[5m])) / clamp_min(sum(rate(demo_api_requests_total[5m])), 1) > 0.05
+      expr: demo_api:availability_error_ratio:rate5m > 0.05
       for: 5m
       labels:
         severity: warning
+        slo: availability
       annotations:
-        summary: "High 5xx error rate in demo-api"
+        summary: High 5xx error rate in demo-api
+        description: demo-api 5xx ratio has been above 5% for 5 minutes.
+    - alert: DemoApiAvailabilityBurnRateFast
+      expr: demo_api:availability_error_ratio:rate5m > (14.4 * 0.001) and demo_api:availability_error_ratio:rate1h > (14.4 * 0.001)
+      for: 2m
+      labels:
+        severity: critical
+        slo: availability
+      annotations:
+        summary: demo-api is rapidly burning its 99.9% availability error budget
+        description: Fast burn-rate alert for a 99.9% availability SLO using 5m and 1h windows.
+    - alert: DemoApiAvailabilityBurnRateSlow
+      expr: demo_api:availability_error_ratio:rate30m > (6 * 0.001) and demo_api:availability_error_ratio:rate6h > (6 * 0.001)
+      for: 15m
+      labels:
+        severity: warning
+        slo: availability
+      annotations:
+        summary: demo-api is steadily burning its 99.9% availability error budget
+        description: Slow burn-rate alert for a 99.9% availability SLO using 30m and 6h windows.

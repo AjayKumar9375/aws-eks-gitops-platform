@@ -1,12 +1,70 @@
-.terraform/
-.terraform.lock.hcl
-*.tfstate
-*.tfstate.backup
-crash.log
-*.log
+# Local environment and secrets
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.kubeconfig
+kubeconfig
+aws-credentials
 
+# Terraform local state and generated files
+**/.terraform/
+**/.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Java and Maven build output
 target/
 out/
+*.class
+*.jar
+*.war
+*.ear
+
+# Test, lint, and coverage caches
 .pytest_cache/
 .ruff_cache/
+.mypy_cache/
+.coverage
+coverage/
+htmlcov/
+
+# Logs and runtime files
+*.log
+logs/
+*.pid
+*.seed
+
+# IDE and editor files
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Docker and local compose overrides
+.docker/
+docker-compose.override.yml
+
+# Helm generated packages
+*.tgz
+charts/

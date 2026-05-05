@@ -1,6 +1,8 @@
-﻿resources:
+resources:
 - demo-api-app.yaml
+- cost-app.yaml
 - monitoring-app.yaml
+- progressive-delivery-app.yaml
 - ingress-app.yaml
 - security-app.yaml
 - secrets-app.yaml

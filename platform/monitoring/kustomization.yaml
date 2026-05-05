@@ -1,3 +1,4 @@
-﻿resources:
+resources:
 - namespace.yaml
 - prometheus-rules.yaml
+- slo-demo-api.yaml

@@ -8,6 +8,9 @@ I built this repository to demonstrate how I design, deploy, and operate a Kuber
 - CI/CD pipelines for linting, testing, scanning, image build, and GitOps promotion
 - Kubernetes security guardrails using Kyverno and OPA Gatekeeper
 - Platform add-ons for ingress, TLS, secrets, and monitoring
+- Progressive delivery with Argo Rollouts canary analysis
+- SLO burn-rate alerts for the demo API availability objective
+- Cost visibility with Kubecost and consistent cost allocation tags
 - A sample Java Spring Boot service (`demo-api`) with health/readiness/metrics endpoints
 
 ## Why These Choices
@@ -15,6 +18,8 @@ I built this repository to demonstrate how I design, deploy, and operate a Kuber
 - GitOps keeps cluster state auditable and PR-driven
 - Policy-as-code catches security misconfigurations before deployment
 - Prometheus metrics + alert rules make operations observable from day one
+- Argo Rollouts supports safer releases with staged traffic progression and automated metric checks
+- Kubecost plus AWS tags provides cost allocation by environment, team, namespace, and workload
 
 ## Repository Layout
 - `infra/terraform`: AWS infrastructure modules and environment stacks
@@ -66,7 +71,14 @@ powershell -ExecutionPolicy Bypass -File scripts/check.ps1
 - Interview-focused summary: `docs/PORTFOLIO.md`
 - Deployment runbook: `DEPLOYMENT.md`
 
+## Implemented Platform Upgrades
+- Canary deployments through Argo Rollouts for `demo-api`
+- Automated rollout analysis using Prometheus success-rate checks
+- Multi-window SLO burn-rate alerts for a 99.9% availability objective
+- Kubecost GitOps application for cost visibility dashboards
+- Terraform cost allocation tags across `dev` and `prod`
+
 ## Next Improvements
-- Progressive delivery (canary/blue-green)
-- SLO burn-rate alerting
-- Cost visibility dashboards
+- Blue-green promotion workflows for high-risk releases
+- Grafana dashboards for SLO and cost trends
+- Alertmanager routing and escalation policies

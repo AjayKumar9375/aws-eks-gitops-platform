@@ -1,0 +1,24 @@
+{{- if .Values.rollout.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: {{ include "demo-api.fullname" . }}-success-rate
+  labels:
+{{ include "demo-api.labels" . | indent 4 }}
+spec:
+  args:
+  - name: service-name
+  metrics:
+  - name: success-rate
+    interval: {{ .Values.rollout.analysis.interval }}
+    count: {{ .Values.rollout.analysis.count }}
+    successCondition: result[0] >= {{ .Values.rollout.analysis.minSuccessRate }}
+    failureLimit: {{ .Values.rollout.analysis.failureLimit }}
+    provider:
+      prometheus:
+        address: {{ .Values.rollout.analysis.prometheusAddress | quote }}
+        query: |
+          sum(rate(demo_api_requests_total{status!~"5.."}[5m]))
+          /
+          clamp_min(sum(rate(demo_api_requests_total[5m])), 1)
+{{- end }}

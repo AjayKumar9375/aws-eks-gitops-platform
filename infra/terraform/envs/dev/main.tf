@@ -17,6 +17,9 @@ locals {
   tags = {
     Project     = "devops-eks-platform"
     Environment = "dev"
+    CostCenter  = "platform"
+    Owner       = "platform-team"
+    ManagedBy   = "terraform"
   }
 }
 

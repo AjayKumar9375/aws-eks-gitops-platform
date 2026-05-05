@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-api-slo
+  namespace: monitoring
+  labels:
+    app: demo-api
+    team: platform
+data:
+  objective: "99.9"
+  window: 30d
+  indicator: 1 - (5xx requests / total requests)
+  fastBurn: 14.4x over 5m and 1h
+  slowBurn: 6x over 30m and 6h

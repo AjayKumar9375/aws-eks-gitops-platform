@@ -41,6 +41,29 @@ autoscaling:
   maxReplicas: 5
   targetCPUUtilizationPercentage: 60
 
+rollout:
+  enabled: true
+  revisionHistoryLimit: 5
+  canary:
+    maxSurge: 25%
+    maxUnavailable: 0
+    analysis:
+      startingStep: 2
+    steps:
+    - setWeight: 20
+    - pause:
+        duration: 2m
+    - setWeight: 50
+    - pause:
+        duration: 5m
+    - setWeight: 100
+  analysis:
+    prometheusAddress: http://prometheus-operated.monitoring.svc:9090
+    interval: 1m
+    count: 3
+    failureLimit: 1
+    minSuccessRate: 0.99
+
 ingress:
   enabled: true
   className: nginx
