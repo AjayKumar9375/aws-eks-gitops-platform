@@ -44,6 +44,8 @@ class DemoApiApplicationTests {
         .andExpect(status().isOk())
         .andExpect(
             content().string(org.hamcrest.Matchers.containsString("demo_api_requests_total")))
-        .andExpect(content().string(org.hamcrest.Matchers.containsString("path=\"/healthz\"")));
+        .andExpect(content().string(org.hamcrest.Matchers.containsString("method=\"GET\"")))
+        .andExpect(content().string(org.hamcrest.Matchers.containsString("path=\"/healthz\"")))
+        .andExpect(content().string(org.hamcrest.Matchers.containsString("status=\"200\"")));
   }
 }

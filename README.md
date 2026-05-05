@@ -29,8 +29,19 @@ I built this repository to demonstrate how I design, deploy, and operate a Kuber
 - Java formatting checks with `spotless`
 - Service tests with `JUnit` + `Spring Boot Test`
 - Terraform format checks in CI
+- Helm chart linting and Kustomize render checks
+- Non-root container runtime and Kubernetes security contexts
+- Required workload labels aligned with policy-as-code guardrails
 - Trivy vulnerability scan in app CI
 - Pre-commit hooks for local consistency
+
+## Developer Prerequisites
+- Java 17 + Maven
+- Terraform 1.6+
+- Docker
+- Helm 3
+- `kubectl` with Kustomize support
+- PowerShell 7+ for helper scripts
 
 ## Local Verification
 ```bash
@@ -43,9 +54,11 @@ powershell -ExecutionPolicy Bypass -File scripts/check.ps1
 
 ## CI/CD Flow
 1. Pull requests run lint, tests, and vulnerability scan.
-2. Push to `master` builds and pushes the image to ECR.
-3. Pipeline updates GitOps image tag in `dev` overlay.
-4. Argo CD syncs the new desired state into EKS.
+2. Platform changes render GitOps overlays and lint Helm charts.
+3. Terraform changes run format checks and environment plans.
+4. Push to `master` builds and pushes the image to ECR.
+5. Pipeline updates GitOps image tag in `dev` overlay.
+6. Argo CD syncs the new desired state into EKS.
 
 ## Architecture and Decisions
 - Detailed architecture: `docs/ARCHITECTURE.md`

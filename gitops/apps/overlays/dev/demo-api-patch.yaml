@@ -2,6 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: demo-api
+  namespace: argocd
 spec:
   destination:
     namespace: demo-dev
@@ -10,7 +11,6 @@ spec:
       parameters:
       - name: image.tag
         value: 276d0cacf11d3d2a03d42dfec7629d0a878730bc
-
 
 
 

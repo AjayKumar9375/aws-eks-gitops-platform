@@ -2,10 +2,13 @@
 kind: Service
 metadata:
   name: {{ include "demo-api.fullname" . }}
+  labels:
+{{ include "demo-api.labels" . | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   selector:
-    app: {{ include "demo-api.name" . }}
+{{ include "demo-api.selectorLabels" . | indent 4 }}
   ports:
   - port: {{ .Values.service.port }}
-    targetPort: 8080
+    targetPort: http
+    name: http

@@ -1,4 +1,5 @@
-﻿replicaCount: 2
+replicaCount: 2
+team: platform
 
 image:
   repository: 205474063511.dkr.ecr.us-east-1.amazonaws.com/java-application
@@ -9,6 +10,11 @@ service:
   type: ClusterIP
   port: 80
 
+serviceMonitor:
+  enabled: true
+  interval: 30s
+  scrapeTimeout: 10s
+
 resources:
   requests:
     cpu: 100m
@@ -16,6 +22,24 @@ resources:
   limits:
     cpu: 500m
     memory: 256Mi
+
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: false
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 60
 
 ingress:
   enabled: true

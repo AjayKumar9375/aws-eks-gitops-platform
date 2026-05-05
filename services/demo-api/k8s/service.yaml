@@ -3,6 +3,9 @@ kind: Service
 metadata:
   name: demo-api
   namespace: demo
+  labels:
+    app: demo-api
+    team: platform
 spec:
   type: ClusterIP
   selector:

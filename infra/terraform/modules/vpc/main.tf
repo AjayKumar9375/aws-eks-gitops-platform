@@ -19,7 +19,13 @@ resource "aws_subnet" "public" {
   availability_zone       = each.key
   map_public_ip_on_launch = true
 
-  tags = merge(var.tags, { Name = "${var.name}-public-${each.key}" })
+  tags = merge(
+    var.tags,
+    {
+      Name                     = "${var.name}-public-${each.key}"
+      "kubernetes.io/role/elb" = "1"
+    }
+  )
 }
 
 resource "aws_subnet" "private" {
@@ -29,7 +35,13 @@ resource "aws_subnet" "private" {
   cidr_block        = each.value
   availability_zone = each.key
 
-  tags = merge(var.tags, { Name = "${var.name}-private-${each.key}" })
+  tags = merge(
+    var.tags,
+    {
+      Name                              = "${var.name}-private-${each.key}"
+      "kubernetes.io/role/internal-elb" = "1"
+    }
+  )
 }
 
 resource "aws_eip" "nat" {

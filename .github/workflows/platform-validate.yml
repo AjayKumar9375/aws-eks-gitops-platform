@@ -1,0 +1,32 @@
+name: platform-validate
+
+on:
+  pull_request:
+    paths:
+      - gitops/**
+      - platform/**
+      - services/demo-api/helm/**
+      - services/demo-api/k8s/**
+      - .github/workflows/platform-validate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - uses: azure/setup-kubectl@v4
+      - name: Helm lint
+        run: helm lint services/demo-api/helm/demo-api
+      - name: Render GitOps overlays
+        run: |
+          kubectl kustomize gitops/apps/overlays/dev >/dev/null
+          kubectl kustomize gitops/apps/overlays/prod >/dev/null
+      - name: Render platform add-ons
+        run: |
+          kubectl kustomize platform/monitoring >/dev/null
+          kubectl kustomize platform/security >/dev/null

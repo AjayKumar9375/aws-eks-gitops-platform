@@ -8,7 +8,7 @@ spec:
   - name: demo-api.rules
     rules:
     - alert: DemoApiHighErrorRate
-      expr: rate(http_requests_total{job="demo-api",status=~"5.."}[5m]) > 0.05
+      expr: sum(rate(demo_api_requests_total{status=~"5.."}[5m])) / clamp_min(sum(rate(demo_api_requests_total[5m])), 1) > 0.05
       for: 5m
       labels:
         severity: warning
